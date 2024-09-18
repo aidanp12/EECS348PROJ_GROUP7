@@ -1,0 +1,11 @@
+=======================
+Name: Charley Findling
+Major: Computer Science
+Known Coding Languages: Python, some C
+KU Email: charleyfindling@ku.edu
+Personal Phone: (316) 730-7760
+=======================
+Availability:
+Monday, Wednesday, Friday: 10AM-anytime
+Tuesday, Thursday: 6PM-anytime
+Saturday, Sunday: 10AM-anytime
