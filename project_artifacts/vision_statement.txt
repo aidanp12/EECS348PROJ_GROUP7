@@ -1,0 +1,5 @@
+=~=~=~=~=~=~=~=~=~=~=~=~=~=~
+GROUP 7 PROJECT PLAN VISION
+=~=~=~=~=~=~=~=~=~=~=~=~=~=~
+
+For our project, our vision is to develop an advanced arithmetic parser and evaluator capable of handling complex mathematical input. Our product aims to process expressions following the order of operations while returning output in a form that is readable by a larger compiler product. Using software development strategies inspired by scrum models, our team aims to accomplish an efficient software module that can be easily implemented into other products. For the user-side aspect of our product, our goal is to make a well-designed terminal interface that allows for direct testing of numerical input.
