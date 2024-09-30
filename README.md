@@ -3,6 +3,7 @@ Repository for the EECS348 Fall Semester 2024 Group Project.
 
 ### **Member Information**
 Trey Baptista
+
   Project Lead
   lebaron.baptista@ku.edu | 913-702-5058
   Programming Experience: Python
@@ -11,6 +12,7 @@ Trey Baptista
     Friday: 12PM-Anytime
 
 Charley Findling
+
   Technical Lead
   charleyfindling@ku.edu | 316-730-7760
   Programming Experience: Python & C
@@ -20,6 +22,7 @@ Charley Findling
     Saturday & Sunday: 10AM-Anytime
 
 Abishai Mathai
+
   UX Designer
   abishai@ku.edu | 785-491-0321
   Programming Experience: Python, C, & C++
@@ -27,7 +30,8 @@ Abishai Mathai
     Tuesday: 8AM-11AM
     Wednesday & Friday: 11AM-12PM
 
-Aidan Prather:
+Aidan Prather
+
   Configuration Manager
   a686p588@ku.edu | 254-291-8191
   Programming Experience: Python, C#, & C++
@@ -38,7 +42,8 @@ Aidan Prather:
     Friday: 10AM-1:45PM
     Saturday & Sunday: Open Availability Before/After 1PM-6PM
 
-Ellie Thach:
+Ellie Thach
+
   Quality Assurance Lead
   elliethach@ku.edu | 816-944-6866
   Programming Experience: Python & Java
