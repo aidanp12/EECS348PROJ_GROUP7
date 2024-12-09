@@ -148,7 +148,7 @@ class Parser {
                 if (i > 0 && expression[i-1] == '*') {
                     // the first power from the right has been found, so it is the "root" operator (backwards now, but same concept because this helps it go left->right)
                     // we can take everything before the ** and make it operand1, the other side operand2
-                    operation = "**";
+                    operation = "^";
                     operand1 = simplify(expression.substr(0, i-1)); // (start, stop)
                     operand2 = simplify(expression.substr(i+1)); // == expression[i+1:] from Python
                     i -= 1; // skip the other *
