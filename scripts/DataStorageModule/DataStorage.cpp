@@ -223,21 +223,20 @@ public:
 };
 
 
-int main()
-{
-    /* This is mostly just debugging/testing stuff, the class doesn't rely on a main function to operate, and probably shouldnt
-    have one. */
-
-    // Example of using the ExpressionTree class
-    ExpressionTree tree("- * + 6 2 10 / 12 4");
-    Results results;
-
-    // Print top node (last operator or operand added)
-    while (tree.returnTop()) tree.pop();
-
-    // Example of recording/printing results to 
-    results.record(tree.evaluate());
-    results.displayResults();
-
-    return 0;
-}
+//int main()
+//{
+//    /* This is mostly just debugging/testing stuff */
+//
+//    // Example of using the ExpressionTree class
+//    ExpressionTree tree("- * + 6 2 10 / 12 4");
+//    Results results;
+//
+//    // Print top node (last operator or operand added)
+//    while (tree.returnTop()) tree.pop();
+//
+//    // Example of recording/printing results to 
+//    results.record(tree.evaluate());
+//    results.displayResults();
+//
+//    return 0;
+//}
