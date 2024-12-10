@@ -1,0 +1,53 @@
+#include <iostream>
+#include <string>
+#include "Parser.cpp"  //Parser module is included
+#include "DataStorage.cpp"  //ExpressionTree and Results modules are included
+
+using std::cin;
+using std::cout;
+using std::endl;
+using std::string;
+
+int main() {
+    string inputExpression;
+    cout << "Enter an arithmetic expression (in infix notation): ";
+    std::getline(cin, inputExpression);
+
+    try {
+        //1. Parse the input expression to convert it to prefix notation
+        Parser parser(inputExpression);
+        string prefixExpression = parser.convert();
+        cout << "Converted to prefix notation: " << prefixExpression << endl;
+
+        //2. Create an ExpressionTree with the prefix expression and evaluate it
+        ExpressionTree expressionTree(prefixExpression);
+        double result = expressionTree.evaluate();
+        cout << "Result: " << result << endl;
+
+        //3. Store the result using the Results class
+        Results results;
+        results.record(result);
+        results.displayResults();
+        
+    } catch (int errorCode) {
+        // Handle errors with appropriate messages
+        switch (errorCode) {
+            case 101:
+                cout << "Error: Invalid input detected." << endl;
+                break;
+            case 105:
+                cout << "Error: Too many closing parentheses." << endl;
+                break;
+            case 106:
+                cout << "Error: Unmatched opening parentheses." << endl;
+                break;
+            case 100:
+                cout << "Error: Expression stack is empty." << endl;
+                break;
+            default:
+                cout << "Unknown error occurred with code: " << errorCode << endl;
+        }
+    }
+
+    return 0;
+}
