@@ -15,6 +15,7 @@ class Parser {
         std::string convert() { // "main" method to return the simplified expression in prefix form
             remove_spaces(this->expression);
             check_parens(this->expression);
+            check_invalid_char(this->expression);
             return simplify(this->expression);
         }
 
@@ -49,18 +50,41 @@ class Parser {
         }
     }
 
+    void check_invalid_char(const std::string &expression) {
+        for (int i = 0; i < expression.size(); i++) {
+            char c = expression[i];
+            if ((-1 > c - '0' || c - '0' > 10) && (c != '+' && c != '-' && c != '*' && c != '/' && c != '%' && c != '(' && c != ')')) { // not a number AND not an operator or parens
+                throw 108; //invalid character in input
+            }
+        }
+    }
+
     std::string simplify(std::string expression) {
         // recursive. needs to return the prefix version of the expression split at the highest precendence operation.        
 
-        // std::cout << "simplify( " << expression << " ) called." << std::endl; // useful for debugging
+        std::cout << "simplify( " << expression << " ) called." << std::endl; // useful for debugging
 
         if (expression.size() == 1) {
             if (-1 < expression[0] - '0' && expression[0] - '0' < 10) {
                 return expression;
             }
             else {
-                std::cout << expression << " will throw an error." << std::endl;
-                throw 101;
+                std::cout << expression << " will throw an error (not a number)." << std::endl;
+                throw 101; // not a number error
+            }
+        }
+
+        char last = expression[expression.size() - 1];
+        if (last == '+' || last == '-' || last == '*' || last == '/' || last == '%') {
+            throw 107; // operator error
+        }
+
+        for (int i = 0; i < expression.size() - 1; i++) {
+            char cur = expression[i];
+            if (cur == '+' || cur == '-' || cur == '*' || cur == '/' || cur == '%') {
+                if (expression[i+1] == ')') {
+                    throw 109; // operator error
+                }
             }
         }
 
@@ -83,6 +107,10 @@ class Parser {
             }
             if (c == ')') {
                 parenthesis_diff += 1;
+                if (i + 1 < expression.size() && (-1 < expression[i+1] - '0' && expression[i+1] - '0' < 10)) {
+                    // if the thing after ')' is a number
+                    throw 112; // need an operator ')' and a number
+                }
             }
 
             // look for lowest precendence operator on the first layer
@@ -96,6 +124,9 @@ class Parser {
                 operand1 = simplify(expression.substr(0, i)); // (start, length)
                 // std::cout << "calling simplify() on operand2 for +/-: " << expression.substr(i+1) << '\n';
                 operand2 = simplify(expression.substr(i+1)); // == expression[i+1:] from Python
+                if (operand1 == "" || operand2 == "") {
+                    throw 110; // missing operand error
+                }
                 return combine_subexpressions(operand1, operation, operand2);
             }
         }
@@ -122,6 +153,9 @@ class Parser {
                     operation = c;
                     operand1 = simplify(expression.substr(0, i));
                     operand2 = simplify(expression.substr(i+1)); // == expression[i+1:] from Python
+                    if (operand1 == "" || operand2 == "") {
+                        throw 110; // missing operand error
+                    }
                     return combine_subexpressions(operand1, operation, operand2);
                 }
             }
@@ -152,6 +186,9 @@ class Parser {
                     operand1 = simplify(expression.substr(0, i-1)); // (start, stop)
                     operand2 = simplify(expression.substr(i+1)); // == expression[i+1:] from Python
                     i -= 1; // skip the other *
+                    if (operand1 == "" || operand2 == "") {
+                        throw 110; // missing operand error
+                    }
                     return combine_subexpressions(operand1, operation, operand2);
                 }
             }
@@ -161,6 +198,9 @@ class Parser {
         // *** important: this relies on the expression being valid (eg. no +- or bad sign input; this needs to be caught earlier)
         // checked after making sure there is not an operation in the middle of the expression
         if (expression[0] == '+') {
+            if (expression.size() == 1) {
+                throw 110; // missing operand error
+            }
             std::string inner = simplify(expression.substr(1));
             if (inner[0] == '+') {
                 return simplify(inner.substr(1)); // if eg. ++2 after simplification from +(+2): simplify the 2 part and return this
@@ -174,6 +214,9 @@ class Parser {
         }
 
         if (expression[0] == '-') {
+            if (expression.size() == 1) {
+                throw 110; // missing operand error
+            }
             std::string inner = simplify(expression.substr(1));
             if (inner[0] == '-') {
                 inner = inner.substr(1); // flip the sign if two negatives
@@ -198,30 +241,30 @@ class Parser {
 };
 
 
-int main() {
-    // another temporary main inlcuded only for testing purposes
-    // Parser parser("1+2*3");
-    // std::cout << parser.convert();
-    // std::cout << R"(combine_subexpressions("2", "**", "3"))" << " -> " << parser.combine_subexpressions("2", "**", "3") << std::endl;
-    std::string testcase1 =             "2**(-3)"                               ;
-    std::string testcase2 =             " -(+1) + (+2)"                          ;
-    std::string testcase3 =             "4 * (3 + 2) % 7 - 1"                 ;
-    std::string testcase4 =             "((2 -) 1 + 3)"                             ;
-    std::string testcase5 =             "-(+2) * (+3) - (-4) / (-5)"             ;
-    Parser parser1(testcase1);
-    Parser parser2(testcase2);
-    Parser parser3(testcase3);
-    Parser parser4(testcase4);
-    Parser parser5(testcase5);
-    std::cout << testcase1 << " -> " << parser1.convert() << '\n' << std::endl;
-    std::cout << testcase2 << " -> " << parser2.convert() << '\n' << std::endl;
-    std::cout << testcase3 << " -> " << parser3.convert() << '\n' << std::endl;
-    std::cout << testcase4 << " -> " << parser4.convert() << '\n' << std::endl;
-    std::cout << testcase5 << " -> " << parser5.convert() << '\n' << std::endl;
+// int main() {
+//     // another temporary main inlcuded only for testing purposes
+//     // Parser parser("1+2*3");
+//     // std::cout << parser.convert();
+//     // std::cout << R"(combine_subexpressions("2", "**", "3"))" << " -> " << parser.combine_subexpressions("2", "**", "3") << std::endl;
+//     std::string testcase1 =             "2**(-3)"                               ;
+//     std::string testcase2 =             " -(+1) + (+2)"                          ;
+//     std::string testcase3 =             "4 * (3 + 2) % 7 - 1"                 ;
+//     std::string testcase4 =             "((2 -(1)) **1 + 3)"                             ;
+//     std::string testcase5 =             "-(+2) * (+3) - (-4) / (-5)"             ;
+//     Parser parser1(testcase1);
+//     Parser parser2(testcase2);
+//     Parser parser3(testcase3);
+//     Parser parser4(testcase4);
+//     Parser parser5(testcase5);
+//     std::cout << testcase1 << " -> " << parser1.convert() << '\n' << std::endl;
+//     std::cout << testcase2 << " -> " << parser2.convert() << '\n' << std::endl;
+//     std::cout << testcase3 << " -> " << parser3.convert() << '\n' << std::endl;
+//     std::cout << testcase4 << " -> " << parser4.convert() << '\n' << std::endl;
+//     std::cout << testcase5 << " -> " << parser5.convert() << '\n' << std::endl;
 
 
-    // 4 * (3 + 2) % 7 - 1 works!!
+//     // 4 * (3 + 2) % 7 - 1 works!!
 
 
-    return 0;
-}
+//     return 0;
+// }
