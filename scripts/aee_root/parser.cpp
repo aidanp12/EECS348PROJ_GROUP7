@@ -34,7 +34,8 @@ class Parser {
 
     void check_parens(const std::string &expression) {
         int parens_counter = 0;
-        for (int i = 0; i < expression.size(); i++) {
+        int length = expression.size();
+        for (int i = 0; i < length; i++) {
             if (expression[i] == '(') {
                 parens_counter += 1;
             }
@@ -51,7 +52,8 @@ class Parser {
     }
 
     void check_invalid_char(const std::string &expression) {
-        for (int i = 0; i < expression.size(); i++) {
+        int length = expression.size();
+        for (int i = 0; i < length; i++) {
             char c = expression[i];
             if ((-1 > c - '0' || c - '0' > 10) && (c != '+' && c != '-' && c != '*' && c != '/' && c != '%' && c != '(' && c != ')')) { // not a number AND not an operator or parens
                 throw 108; //invalid character in input
@@ -62,9 +64,11 @@ class Parser {
     std::string simplify(std::string expression) {
         // recursive. needs to return the prefix version of the expression split at the highest precendence operation.        
 
-        std::cout << "simplify( " << expression << " ) called." << std::endl; // useful for debugging
+        // std::cout << "simplify( " << expression << " ) called." << std::endl; // useful for debugging
 
-        if (expression.size() == 1) {
+        int length = expression.size();
+
+        if (length == 1) {
             if (-1 < expression[0] - '0' && expression[0] - '0' < 10) {
                 return expression;
             }
@@ -74,12 +78,12 @@ class Parser {
             }
         }
 
-        char last = expression[expression.size() - 1];
+        char last = expression[length - 1];
         if (last == '+' || last == '-' || last == '*' || last == '/' || last == '%') {
             throw 107; // operator error
         }
 
-        for (int i = 0; i < expression.size() - 1; i++) {
+        for (int i = 0; i < length - 1; i++) {
             char cur = expression[i];
             if (cur == '+' || cur == '-' || cur == '*' || cur == '/' || cur == '%') {
                 if (expression[i+1] == ')') {
@@ -98,7 +102,7 @@ class Parser {
                                   // this *should* get around needing to calculate what inside the parens
                                   // note that because we check for if the whole expression is in (), this should work for all cases
 
-        for (int i = expression.size() - 1; 0 < i; i--) { // iterate through the expression from the right (for left to right order of operations, don't ask) from prev (so it can recurse)
+        for (int i = length - 1; 0 < i; i--) { // iterate through the expression from the right (for left to right order of operations, don't ask) from prev (so it can recurse)
 
             char c = expression[i];
 
@@ -107,7 +111,7 @@ class Parser {
             }
             if (c == ')') {
                 parenthesis_diff += 1;
-                if (i + 1 < expression.size() && (-1 < expression[i+1] - '0' && expression[i+1] - '0' < 10)) {
+                if (i + 1 < length && (-1 < expression[i+1] - '0' && expression[i+1] - '0' < 10)) {
                     // if the thing after ')' is a number
                     throw 112; // need an operator ')' and a number
                 }
@@ -132,7 +136,7 @@ class Parser {
         }
 // ----------------- *, /, % -----------------
         parenthesis_diff = 0;
-        for (int i = expression.size() - 1; 0 < i; i--) { // iterate through the expression from the right (for left to right order of operations, don't ask) from prev (so it can recurse)
+        for (int i = length - 1; 0 < i; i--) { // iterate through the expression from the right (for left to right order of operations, don't ask) from prev (so it can recurse)
 
             char c = expression[i];
 
@@ -149,7 +153,7 @@ class Parser {
             }
             // ----------------- *, /, % -----------------
             if (c == '*' || c == '/' || c == '%') { // * must be for multiplication now
-                if (i > 0 && expression[i-1] != '*' && i < expression.size() - 1 && expression[i+1] != '*') { // don't mistake * for **
+                if (i > 0 && expression[i-1] != '*' && i < length - 1 && expression[i+1] != '*') { // don't mistake * for **
                     operation = c;
                     operand1 = simplify(expression.substr(0, i));
                     operand2 = simplify(expression.substr(i+1)); // == expression[i+1:] from Python
@@ -162,7 +166,7 @@ class Parser {
         }
 // ----------------- ** -----------------
         parenthesis_diff = 0;
-        for (int i = expression.size() - 1; 0 < i; i--) { // iterate through the expression from the right (for left to right order of operations, don't ask) from prev (so it can recurse)
+        for (int i = length - 1; 0 < i; i--) { // iterate through the expression from the right (for left to right order of operations, don't ask) from prev (so it can recurse)
 
             char c = expression[i];
 
@@ -198,7 +202,7 @@ class Parser {
         // *** important: this relies on the expression being valid (eg. no +- or bad sign input; this needs to be caught earlier)
         // checked after making sure there is not an operation in the middle of the expression
         if (expression[0] == '+') {
-            if (expression.size() == 1) {
+            if (length == 1) {
                 throw 110; // missing operand error
             }
             std::string inner = simplify(expression.substr(1));
@@ -214,7 +218,7 @@ class Parser {
         }
 
         if (expression[0] == '-') {
-            if (expression.size() == 1) {
+            if (length == 1) {
                 throw 110; // missing operand error
             }
             std::string inner = simplify(expression.substr(1));
@@ -226,8 +230,8 @@ class Parser {
         
         
         // matching parenthesis (eliminate and call again *only after making sure there are no first-layer operators*)
-        if (expression[0] == '(' && expression[expression.size()-1] == ')') {
-            return simplify(expression.substr(1, expression.size() - 2));
+        if (expression[0] == '(' && expression[length-1] == ')') {
+            return simplify(expression.substr(1, length - 2));
         }
 
         return expression;
