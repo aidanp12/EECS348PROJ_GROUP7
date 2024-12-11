@@ -76,6 +76,9 @@ public:
             case 110:
                 cout << "Error: Missing operand in the expression." << endl;
                 break;
+            case 113:
+                cout << "Error: Division by 0 in the expression." << endl;
+                break;
 
             default:
                 cout << "Unknown error occurred with code: " << errorCode << endl;

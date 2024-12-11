@@ -118,6 +118,9 @@ public:
                         result = num1 * num2; 
                         break;
                     case '/':
+                        if (num2 == 0) {
+                            throw 113;
+                        }
                         result = num1 / num2;
                         break;
                     case '%':
