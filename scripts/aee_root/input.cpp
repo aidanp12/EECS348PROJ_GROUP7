@@ -16,7 +16,7 @@ using std::string;
 
 class Input {
 private:
-    string inputExpression;
+    string inputExpression = "";
 public:
 
     Input(int i) {
@@ -30,7 +30,11 @@ public:
 
     void getExpression() {
         cout << "Enter an arithmetic expression (in infix notation): ";
+        restart:
         std::getline(cin, inputExpression);
+        if (inputExpression == ""){
+            goto restart;
+        }
     }
 
     int run() {
@@ -43,7 +47,6 @@ public:
             //2. Create an ExpressionTree with the prefix expression and evaluate it
             ExpressionTree expressionTree(prefixExpression);
             double result = expressionTree.evaluate();
-            cout << "Result: " << result << endl;
 
             //3. Store the result using the Results class
             Results results;
@@ -56,6 +59,7 @@ public:
             switch (errorCode) {
             case 100:
                 cout << "Error: Expression stack is empty." << endl;
+                break;
             case 101:
                 cout << "Error: Invalid input detected." << endl;
                 break;
@@ -71,7 +75,7 @@ public:
                 cout << "Error: Consecutive / non-paired operators." << endl;
                 break;
             case 108:
-                cout << "Error: Non-numeric character in expression.";
+                cout << "Error: Non-numeric character in expression." << endl;
                 break;
             case 110:
                 cout << "Error: Missing operand in the expression." << endl;

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "input.cpp"  // use input module
+#include <string>
 
 using std::cin;
 using std::cout;
@@ -11,17 +12,15 @@ using std::string;
 
 int main() 
 {
-	bool continue_program = true;
-    
-    while (continue_program) {
+    char response = 'y';
+    while (response == 'y' || response == 'Y') {
+        Input input(1);
         cout << "Do you want to continue the program? Type \"y\" for yes or \"n\" for no: ";
-        
-        char response;
         cin >> response;
         
         if (response == 'n' || response == 'N') {
-            continue_program = false;
-        } 
+            break;
+        }
         // If user types 'y', the loop just continues.
     }
     
