@@ -53,6 +53,9 @@ class Parser {
 
     void check_invalid_char(const std::string &expression) {
         int length = expression.size();
+        if (length == 0) {
+            throw 101; // invalid input code
+        }
         for (int i = 0; i < length; i++) {
             char c = expression[i];
             if ((-1 > c - '0' || c - '0' > 10) && (c != '+' && c != '-' && c != '*' && c != '/' && c != '%' && c != '(' && c != ')')) { // not a number AND not an operator or parens
@@ -92,7 +95,7 @@ class Parser {
             }
         }
 
-        // ------------- checks above ------------- main loop below
+        // ------------- checks above ------------- main loops below
 
         std::string operand1; // = "" implied
         std::string operand2;
@@ -108,12 +111,15 @@ class Parser {
 
             if (c == '(') {
                 parenthesis_diff -= 1;
+                if ((-1 < expression[i-1] - '0' && expression[i-1] - '0' < 10)) {
+                    throw 112; // need an operator between '()' and a number (missing operator)
+                }
             }
             if (c == ')') {
                 parenthesis_diff += 1;
                 if (i + 1 < length && (-1 < expression[i+1] - '0' && expression[i+1] - '0' < 10)) {
                     // if the thing after ')' is a number
-                    throw 112; // need an operator ')' and a number
+                    throw 112; // need an operator between ')' and a number
                 }
             }
 
@@ -226,6 +232,11 @@ class Parser {
                 inner = inner.substr(1); // flip the sign if two negatives
             }
             return expression[0] + inner;
+        }
+
+        char cur = expression[0];
+        if (cur == '*' || cur == '/' || cur == '%') {
+            throw 110; // missing operand error
         }
         
         
